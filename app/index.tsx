@@ -11,7 +11,7 @@ export default function Index() {
   return (
     <View>
 
-      <View>
+      <View style={styles.zone}>
         <TouchableOpacity
           onPress={() => {router.push("/homepage")}}>
         <Text style={styles.hypertext}>Sauter à la homepage</Text>
@@ -41,5 +41,10 @@ export default function Index() {
 const styles = StyleSheet.create({
   hypertext: {
     color:'blue', textDecorationLine:'underline'
+  },
+  zone :{
+    marginTop:100,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
