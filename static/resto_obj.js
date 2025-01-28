@@ -71,5 +71,13 @@ class MenuItems {
   
       return new Restaurent(name,description,image,location,slug,menuList);
     }
+    static jsonToAllResto(json){
+      let restoList = [];
+      let indList = Object.keys(json);
+      for (let i = 0; i<indList.length; i++){
+          restoList.push(Restaurent.jsonToResto(json[indList[i]]));
+        }
+      return restoList;
+  }
   }
 export {Restaurent, MenuItems};
