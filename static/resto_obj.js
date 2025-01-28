@@ -21,7 +21,7 @@ class MenuItems {
   }
   
   class Restaurent {
-    constructor (name='', description='', imageURL='', location='', slug='', menu=[]) {
+    constructor (name='', description='', imageURL='', location='', slug='',isOp=false, menu=[]) {
       this.name = name;
       this.description = description;
       //this.opHours = opHours;
@@ -30,7 +30,7 @@ class MenuItems {
       this.location = location;
       this.slug = slug;
       this.menu = menu;
-  
+      this.isOp = isOp;
       //create array of categories for all items in menu
       let menuCatSet = new Set();
       for(let i = 0; i<this.menu.length; i++){
@@ -57,6 +57,7 @@ class MenuItems {
       let image = json['image_url'];
       let location = json['location']['pavillon']+" "+json['location']['local'];
       let slug = json['slug'];
+      let isOp = json['is_open'];
   
       //get list of items in json
       let jsonList = json['menu_items'];      
@@ -69,7 +70,7 @@ class MenuItems {
         menuList.push(MenuItems.jsonToMenu(jsonList[indList[i]],slug));
       }
   
-      return new Restaurent(name,description,image,location,slug,menuList);
+      return new Restaurent(name,description,image,location,slug,isOp,menuList);
     }
     static jsonToAllResto(json){
       let restoList = [];
