@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, router } from "expo-router";
 import * as Location from "expo-location";
 import { Star, Vegan } from "lucide-react-native";
 import { View, StyleSheet, Image, Text } from "react-native";
+import {Restaurent, MenuItems} from "../../static/resto_obj";
 
 
 import useLocation from "@/hooks/useLocation";
@@ -91,7 +92,20 @@ export default function HomeScreen() {
       ></FilterModalLayout>
     );
   }
-
+  const [restoList, setRestoList] = useState([]);
+  const getRestoList = async () => {
+    try {
+      const response = await fetch('https://cafesansfil-api-r0kj.onrender.com/api/cafes/');
+      const data = await response.json(); // On convertit la réponse en JSON
+      setRestoList(Restaurent.jsonToAllResto(data));
+      //console.log(resto);
+    } catch (error) {
+      console.log('Erreur lors de la récupération de la blague :', error);
+    }
+  }
+  useEffect(() => {
+    getRestoList();
+  },[]);
   return (
     <ScrollableLayout>
       <>
@@ -147,12 +161,13 @@ export default function HomeScreen() {
             dividerBottom
           >
             <CafeCard
-              name="Jean Brillant"
-              location="Pavillon Claire McNicole"
+              name={restoList[0].name}
+              location={restoList[0].location}
               priceRange="$$"
               rating={4.8}
-              status="open"
-              slug="Cafe Tore et Fraction"
+              image={restoList[0].image}
+              status={restoList[0].isOp}
+              slug={restoList[0].slug}
             />
             <CafeCard
               name="Jean Brillant"
