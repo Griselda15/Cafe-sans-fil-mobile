@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Redirect, router } from "expo-router";
 import * as Location from "expo-location";
 import { Star, Vegan } from "lucide-react-native";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, FlatList } from "react-native";
 import {Restaurent, MenuItems} from "../../static/resto_obj";
 
 
@@ -93,6 +93,7 @@ export default function HomeScreen() {
     );
   }
   const [restoList, setRestoList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const getRestoList = async () => {
     try {
       const response = await fetch('https://cafesansfil-api-r0kj.onrender.com/api/cafes/');
@@ -104,7 +105,7 @@ export default function HomeScreen() {
     }
   }
   useEffect(() => {
-    getRestoList();
+    getRestoList().finally(()=>{setLoading(false)});
   },[]);
   return (
     <ScrollableLayout>
@@ -160,17 +161,18 @@ export default function HomeScreen() {
             scrollGap={SPACING["md"]}
             dividerBottom
           >
-            <CafeCard
-              name={restoList[0].name}
-              location={restoList[0].location}
+            {loading? (<Text>I am trying my best</Text>):
+            (restoList.map((resto)=><CafeCard
+              key={resto.slug}
+              name={resto.name}
+              status={resto.isOp}
+              location={resto.location}
               priceRange="$$"
               rating={4.8}
-              image={restoList[0].image}
-              status={restoList[0].isOp}
-              slug={restoList[0].slug}
-            />
+              image={resto.image}
+              slug={resto.slug}/>))}
             <CafeCard
-              name="Jean Brillant"
+              name='test'
               location="Pavillon Claire McNicole"
               priceRange="$$"
               rating={4.8}
