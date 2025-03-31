@@ -1,48 +1,76 @@
 import * as SecureStore from "expo-secure-store";
 
 /**
- * Function to save data securely.
- * @param key The identifier for the stored data.
- * @param value A JSON object containing the data to be saved.
+ * Function to save data to user's storage (so it persists after the app is closed).
+ * @param key: the "id" of the attached value. This key is needed to fetch this data.
+ * @param value: a JSON object containing the data that needs to be saved.
  */
 export const saveSecurely = async (key, value) => {
     try {
         const jsonValue = JSON.stringify(value);
         await SecureStore.setItemAsync(key, jsonValue);
-        console.log("Saved:", key);
-    } catch (error) {
-        console.error("SecureStore Save Error:", error);
+        console.log('saved value at key: ', key, value);
+    }catch (error){
+        throw error;
     }
-};
+}
 
 /**
- * Function to fetch saved data securely.
- * @param key The identifier for the stored data.
- * @returns A parsed JSON object if data exists, otherwise null.
+ * Function to save data to user's storage (so it persists after the app is closed). Synchronous.
+ * @param key: the "id" of the attached value. This key is needed to fetch this data.
+ * @param value: a JSON object containing the data that needs to be saved.
+ */
+export const saveSync = (key, value) => {
+    try {
+        const jsonValue = JSON.stringify(value);
+        SecureStore.setItem(key, jsonValue);
+        console.log('saved cafe ', key)
+    }catch (error){
+        throw error;
+    }
+}
+
+/**
+ * Function to fetch the saved data.
+ * @param key: the "id" of the attached value. This key is needed to fetch this data.
+ * @returns a JSON object containing the data that was fetched. If no data was found, returns null
  */
 export const fetchSecurely = async (key) => {
     try {
         const jsonValue = await SecureStore.getItemAsync(key);
-        return jsonValue ? JSON.parse(jsonValue) : null;
-    } catch (error) {
-        console.error("SecureStore Fetch Error:", error);
-        return null;
+        console.log('fetched value : ', key, '...', jsonValue != null ? JSON.parse(jsonValue).slug : null);
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
+    }catch (error){
+        throw error;
     }
-};
+}
 
 /**
- * Function to delete saved data securely.
- * @param key The key for the stored data.
+ * Function to fetch the saved data (synchronous, scopes the localStorage).
+ * @param key: the "id" of the attached value. This key is needed to fetch this data.
+ * @returns a JSON object containing the data that was fetched. If no data was found, returns null
+ */
+export const fetchSync = (key) => {
+    try {
+        const jsonValue = SecureStore.getItem(key);
+        console.log('fetched value: ', JSON.parse(jsonValue)?.slug);
+        return jsonValue != null ? JSON.parse(jsonValue) : null 
+    }catch (error){
+        throw error;
+    }
+}
+
+/**
+ * Function to delete saved data
+ * @param key : the key attached to the saved data that needs to be removed
  */
 export const deleteSecurely = async (key) => {
     try {
         await SecureStore.deleteItemAsync(key);
-        console.log("Deleted:", key);
-    } catch (error) {
-        console.error("SecureStore Delete Error:", error);
+    }catch (error) {
+        throw error;
     }
-};
-
+}
 /**
  * Function to save a favorite cafe.
  * If the favorites list exists, add the new cafe; otherwise, create a new list.

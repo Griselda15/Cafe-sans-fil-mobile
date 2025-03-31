@@ -3,7 +3,9 @@ import { SignedIn, useAuth, useOAuth } from "@clerk/clerk-expo";
 import TYPOGRAPHY from "@/constants/Typography";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import HeaderLayout from "@/components/layouts/HeaderLayout";
-import { Home, Settings, ShoppingBasket } from "lucide-react-native";
+import { Home, Settings, ShoppingBasket, UserRound} from "lucide-react-native";
+import { SafeAreaView } from "react-native";
+import { Platform } from "react-native";
 
 export default function TabLayout() {
     const { isSignedIn } = useAuth();
@@ -12,7 +14,11 @@ export default function TabLayout() {
         screenOptions={{
           tabBarActiveTintColor: "black",
           tabBarInactiveTintColor: "#89898D",
-          tabBarStyle: { paddingTop: 6 },
+          tabBarStyle: {
+            ...Platform.select({
+              ios:{padding: 6},
+              android:{padding: 8, height:"7%"}
+            })},
         }}
       >
         <Tabs.Screen
@@ -22,6 +28,7 @@ export default function TabLayout() {
             header: () => <HeaderLayout />,
             tabBarIcon: ({ color }) => <Home size={28} color={color} />,
             tabBarLabelStyle: TYPOGRAPHY.body.small.bold,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
@@ -33,6 +40,7 @@ export default function TabLayout() {
               <FontAwesome size={24} name="heart" color={color} />
             ),
             tabBarLabelStyle: TYPOGRAPHY.body.small.bold,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
@@ -44,15 +52,17 @@ export default function TabLayout() {
               <ShoppingBasket size={28} color={color} />
             ),
             tabBarLabelStyle: TYPOGRAPHY.body.small.bold,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
           name="parametre"
           options={{
-            title: "Settings",
+            title: "Compte",
             headerShown: false,
-            tabBarIcon: ({ color }) => <Settings size={28} color={color} />,
+            tabBarIcon: ({ color }) => <UserRound size={28} color={color} />,
             tabBarLabelStyle: TYPOGRAPHY.body.small.bold,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
@@ -67,6 +77,7 @@ export default function TabLayout() {
           options={{
             href: null,
             headerShown: false,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
@@ -74,6 +85,7 @@ export default function TabLayout() {
           options={{
             href: null,
             headerShown: false,
+            animation: 'shift'
           }}
         />
         <Tabs.Screen
@@ -81,6 +93,7 @@ export default function TabLayout() {
           options={{
             href: null,
             headerShown: false,
+            animation: 'shift'
           }}
         />
       </Tabs>

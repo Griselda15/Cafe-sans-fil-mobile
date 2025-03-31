@@ -8,7 +8,7 @@ import COLORS from "@/constants/Colors";
 import SPACING from "@/constants/Spacing";
 
 type CafeCardProps = {
-  status?: any;
+  status: boolean;
 
   /** The name of the cafe */
   name: string;
@@ -85,19 +85,24 @@ export default function CafeCard({
         //console.log(slug);
         router.push(`/cafe/${slug}`)
       }}
-      style={{ width: cardDimensions[size].width }}
+      style={{ width: cardDimensions[size].width, 
+        shadowColor: "#000",                       // Black shadow
+        shadowOffset: { width: 5, height: 5 },     // Offset shadow towards bottom-right 
+        shadowOpacity: 0.25,                        // Half opaque
+        shadowRadius: 6,                          // Smoothness of the shadow
+        elevation: 20, 
+        paddingTop: 5
+      }}
       testID="button"
     >
       <View>
-        <View style={styles.imageShadowBox}>
-          <Image
-            source={image ? { uri: image } : cardDimensions[size].image}
-            width={cardDimensions[size].width}
-            height={cardDimensions[size].height}
-            style={{ borderRadius: SPACING["sm"]}}
-            testID="image"
-          />
-        </View>
+        <Image
+          source={image ? { uri: image } : cardDimensions[size].image}
+          width={cardDimensions[size].width}
+          height={cardDimensions[size].height}
+          style={{borderRadius:10}}
+          testID="image"
+        />
         <Text
           style={[
             TYPOGRAPHY.body.small.bold,
@@ -118,18 +123,10 @@ export default function CafeCard({
               height={12}
               strokeWidth={1}
               color={
-                status === "open"
-                  ? COLORS.status.green
-                  : status === "closing soon"
-                  ? COLORS.status.orange
-                  : COLORS.status.red
+                status ? COLORS.status.green : COLORS.status.red
               }
               fill={
-                status === "open"
-                  ? COLORS.status.green
-                  : status === "closing soon"
-                  ? COLORS.status.orange
-                  : COLORS.status.red
+                status ? COLORS.status.green : COLORS.status.red
               }
               testID="tooltip-icon"
             />
@@ -182,24 +179,12 @@ const styles = StyleSheet.create({
     right: SPACING.sm,
     top: SPACING.sm,
   },
-  imageShadowBox : {
-    // For iOS
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 7,
-          height: 7,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-      },
+  wrapper: {
+    shadowColor: "#000",                       // Black shadow
+    shadowOffset: { width: 5, height: 5 },     // Offset shadow towards bottom-right 
+    shadowOpacity: 0.25,                        // Half opaque
+    shadowRadius: 5,                          // Smoothness of the shadow
 
-      // For Android
-      android: {
-        elevation: 5,
-        backgroundColor: '#ffffff'
-      },
-    }),
+    elevation: 3, 
   }
 });

@@ -1,7 +1,6 @@
 import { View, SafeAreaView, FlatList, AppState, TouchableOpacity, Text } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import ScrollableLayout from '@/components/layouts/ScrollableLayout';
-import CardScrollableLayout from '@/components/layouts/CardScrollableLayout';
 import SPACING from '@/constants/Spacing';
 import CafeCard from '@/components/common/Cards/CafeCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,8 +41,9 @@ export default function FavorisScreen() {
   
 
   return (
-    <ScrollableLayout>
-      <SafeAreaView>
+    <>
+    <HeaderLayout />
+      <ScrollableLayout>
         <View>
           <TouchableOpacity onPress={() => { 
             deleteSecurely('favorites');
@@ -63,6 +63,7 @@ export default function FavorisScreen() {
               data={data}
               renderItem={({ item }) => (
                 <CafeCard
+                  id={item.id}
                   name={item.name}
                   image={item.image_url}
                   location={item.location.pavillon}
@@ -72,14 +73,13 @@ export default function FavorisScreen() {
                   slug={item.slug}
                 />
               )}
-              keyExtractor={(item) => item.cafe_id}
+              keyExtractor={item => item.id}
               horizontal
               ItemSeparatorComponent={() => <View style={{ width: SPACING["md"] }} />}
               scrollEnabled={true}
             />
-          </CardScrollableLayout>
         </View>
-      </SafeAreaView>
-    </ScrollableLayout>
+      </ScrollableLayout>
+    </>
   );
 }

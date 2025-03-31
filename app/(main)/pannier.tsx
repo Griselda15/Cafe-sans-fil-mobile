@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import ScrollableLayout from '@/components/layouts/ScrollableLayout'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -10,7 +9,11 @@ import {
   Alert
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import HeaderLayout from "@/components/layouts/HeaderLayout";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { deleteSecurely, fetchSecurely } from '@/scripts/storage';
+import { fetchPannier } from '@/scripts/pannier';
+import { router } from 'expo-router';
 
 const Panier = () => {
   const [items, setItems] = useState([
@@ -29,6 +32,18 @@ const Panier = () => {
       image: 'https://via.placeholder.com/80',
     },
   ]);
+
+  const [cart, setCart] = useState();
+  const [reload, setReload] = useState(false);
+  
+  useEffect(() => {
+    let savedCart = async () => {
+      let ret = await fetchSecurely('pannier');
+      setCart(ret);
+      console.log(ret);
+    }
+    savedCart();
+  }, [reload]);
 
   // Fonction pour calculer le total du panier
   const calculateTotal = () =>
@@ -69,21 +84,28 @@ const Panier = () => {
     );
   };
 
-  return (
+  return (<>
+    <HeaderLayout />
     <View style={styles.container}>
-      <Text style={styles.title}>Panier des items sélectionnés</Text>
-
+      
+      <TouchableOpacity onPress={() => setReload(!reload)}>
+        <Text style={styles.title}>Panier des items sélectionnés</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteSecurely('pannier')}>
+        <Text style={styles.title}>delete pannnier</Text>
+      </TouchableOpacity>
       {items.length > 0 ? (
         <>
           <FlatList
-            data={items}
+            data={cart}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => router.push(`/cafe/${item.cafe_id}/${item.id}`)}>
               <View style={styles.itemContainer}>
                 <Image source={{ uri: item.image }} style={styles.itemImage} />
                 <View style={styles.textContainer}>
                   <Text style={styles.itemTitle}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>{item.price.toFixed(2)} $</Text>
+                  <Text style={styles.itemPrice}>{item.price} $</Text>
                   <Text style={styles.itemQuantity}>
                     Quantité: {item.quantity}
                   </Text>
@@ -100,6 +122,7 @@ const Panier = () => {
                   </TouchableOpacity>
                 </View>
               </View>
+              </TouchableOpacity>
             )}
           />
 
@@ -113,7 +136,7 @@ const Panier = () => {
       ) : (
         <Text style={styles.emptyCartText}>Votre panier est vide.</Text>
       )}
-    </View>
+    </View></>
   );
 };
 
@@ -127,7 +150,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
-    marginTop: 10,
     textAlign: 'center',
   },
   itemContainer: {
@@ -155,7 +177,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   itemImage: {
-    width: "",
+    width: 80,
     height: 80,
     borderRadius: 8,
   },

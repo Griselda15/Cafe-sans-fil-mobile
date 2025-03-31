@@ -9,22 +9,19 @@ type DayCardProps = {
 export default function DayCard({ day, blocks }: DayCardProps) {
   return (
     <View style={styles.cardContainer}>
-      <Text style={styles.dayText}>{day}</Text>
+      <Text style={styles.dayText}>{day.charAt(0) + day.slice(1).toLowerCase()}</Text>
       <View style={styles.flatListWrapper}>
         <FlatList
           data={blocks}
           keyExtractor={(item, index) => `${item.start}-${index}`}
           horizontal
           contentContainerStyle={styles.flatListContent}
-          style={{alignSelf: 'center', marginBottom: "5%"}}
+          style={{alignSelf: "center"}}
           renderItem={({ item }) => (
             <View style={styles.blockContainer}>
-              <Text style={styles.blockText}>{item.start}</Text>
-              <Text style={styles.blockText}>{item.end}</Text>
+              <Text style={styles.blockText}>{item.start} - {item.end}</Text>
             </View>
           )}
-          ItemSeparatorComponent={() => 
-            <View style={{flex: 1, borderWidth: 2, borderColor: 'black'}}></View>}
         />
       </View>
     </View>
@@ -33,8 +30,9 @@ export default function DayCard({ day, blocks }: DayCardProps) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    margin: 16,
+    marginVertical: 16,
     alignItems: "center", // Center align the day and FlatList
+    width:110
   },
   dayText: {
     fontSize: 18,
@@ -47,17 +45,19 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     justifyContent: "center", // Center align FlatList items horizontally
+    width:100
   },
   blockContainer: {
     marginHorizontal: 8,
     backgroundColor: "#f2f2f2",
-    padding: 8,
     borderRadius: 8,
+    paddingVertical:8,
     justifyContent: "center",
     alignItems: "center",
+    width:100
+
   },
   blockText: {
     fontSize: 14,
-    textAlign: "center",
   },
 });
